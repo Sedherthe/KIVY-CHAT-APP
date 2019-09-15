@@ -1,4 +1,5 @@
 import socket
+import pickle
 
 HEADERSIZE = 10
 
@@ -7,13 +8,13 @@ s.connect((socket.gethostbyname('localhost'), 1234))
 
 while True:
 
-	full_msg = ''
+	full_msg = b'' # Now we'll keep it as byte strings only.
 	new_msg = True
 
 	while True:
 		
 		msg = s.recv(16) # Receive the 16 len strings.
-		msg = msg.decode('utf-8')
+		#msg = msg.decode('utf-8')
 		print(f'Message received is : {msg}')
 
 		if new_msg:
@@ -26,6 +27,8 @@ while True:
 		if len(full_msg) - HEADERSIZE == msglen:
 			print("Full message received")
 			print(full_msg[HEADERSIZE:]) # First headersize bits contain the size of the message at max.
+			d = pickle.loads(full_msg[HEADERSIZE:])
+			print(d)
 			new_msg = True
 			full_msg = ''
 		
