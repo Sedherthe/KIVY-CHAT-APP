@@ -1,8 +1,10 @@
 import socket
+import pickle
 
 HEADERSIZE = 10
 
-    ## Create a socket for server role ##
+
+	    ## Create a socket for server role ##
 try:
 	# The address family, kind of socket to use. STREAM here.
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM);
@@ -18,7 +20,9 @@ while True:
 	clientsocket, address = s.accept()
 	print(f'Connection from {address} established!!')
 	# It is byte stream by default.
-	msg = "Welcome to the Server"
-	msg = f'{len(msg):<{HEADERSIZE}}' + msg
+	#msg = "Welcome to the Server"
+	d = {1: 'Hey', 2: "There"}
+	msg = pickle.dumps(d) # Returns serialized bytes form of d.	
+	msg = bytes(f'{len(msg):<{HEADERSIZE}}', 'utf-8') + msg
 	print(f'Message sent is : {msg}')
-	clientsocket.send(bytes(msg, 'utf-8'))
+	clientsocket.send(msg)
